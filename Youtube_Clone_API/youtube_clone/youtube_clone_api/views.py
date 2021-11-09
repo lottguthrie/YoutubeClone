@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from .serilaizers import VideoSerializer
-from rest_frameswork.views import APIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest.framework import status
+from rest_framework import status
 from .models import Video
 
 # Create your views here.

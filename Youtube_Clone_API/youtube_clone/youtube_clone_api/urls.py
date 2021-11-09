@@ -2,5 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('video/', views.VideoList.as_view()),
+    path('youtube_clone_api', views.VideoList.as_view()),
+    
 ]

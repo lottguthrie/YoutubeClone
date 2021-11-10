@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Comment, Reply, Video
+from .models import Comment, Reply
 
-class VideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Video
-        fields = ['id', 'title', 'comments', 'artist', 'release_date']
+# class VideoSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Video
+#         fields = ['id', 'title', 'comments', 'artist', 'release_date']
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,11 +14,11 @@ class CommentSerializer(serializers.ModelSerializer):
 class ReplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply
-        fields = ['reply', 'comment_id']
+        fields = ['reply', 'comment']
 
-class LikeButtonSerializer(serializers.ModelSerializer):
-    class Meta:
-        unique_together = ("video", "comment", "value")
+# class LikeButtonSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         unique_together = ("video", "comment", "value")
 
 
         

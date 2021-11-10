@@ -1,41 +1,40 @@
 
-from .serilaizers import VideoSerializer, CommentSerializer, ReplySerializer, LikeButtonSerializer
+from .serilaizers import CommentSerializer, ReplySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import LikeButton, Video
 from .models import Comment
 from .models import Reply
 from django.http.response import Http404
-from django.shortcuts import render, get_object_or_404
 
-# Create your views here.
-class VideoList(APIView):
-    def get(self,request):
-        video = Video.objects.all()
-        serializer = VideoSerializer(video, many=True)
-        return Response(serializer.data)
 
-    def post(self, request):
-        serializer = VideoSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# # Create your views here.
+# class VideoList(APIView):
+#     def get(self,request):
+#         video = Video.objects.all()
+#         serializer = VideoSerializer(video, many=True)
+#         return Response(serializer.data)
 
-class VideoDetail(APIView):
+#     def post(self, request):
+#         serializer = VideoSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_object(self, pk):
-        try:
-            return Video.objects.get(pk=pk)
-        except Video.DoesNotExist:
-            raise Http404
+# class VideoDetail(APIView):
+
+#     def get_object(self, pk):
+#         try:
+#             return Video.objects.get(pk=pk)
+#         except Video.DoesNotExist:
+#             raise Http404
 
     
-    def get(self, request, pk):
-        Video = self.get_object(pk)
-        serializer = VideoSerializer(video)
-        return Response(serializer.data)
+#     def get(self, request, pk):
+#         Video = self.get_object(pk)
+#         serializer = VideoSerializer(video)
+#         return Response(serializer.data)
 
 class CommentList(APIView):
     def get(self,request):
@@ -125,140 +124,140 @@ class ReplyDetail(APIView):
 
 
 
-def createcomment(request):
-        if request.method == 'POST':
-            if request.POST.get('title') and request.POST.get('comments'):
-                comment=Comment()
-                comment.title= request.POST.get('title')
-                comment.comment= request.POST.get('comment')
-                comment.save()
+# def createcomment(request):
+#         if request.method == 'POST':
+#             if request.POST.get('title') and request.POST.get('comments'):
+#                 comment=Comment()
+#                 comment.title= request.POST.get('title')
+#                 comment.comment= request.POST.get('comment')
+#                 comment.save()
                 
 
-                return render(request, 'comment/create.html')  
+#                 return render(request, 'comment/create.html')  
 
         
 
-        else:
-                return render(request,'comment/create.html')
+#         else:
+#                 return render(request,'comment/create.html')
 
 
-def home(request):
-        allcomments= Comment.objects.all()
+# def home(request):
+#         allcomments= Comment.objects.all()
 
-        context={'allcomments': allcomments }
+#         context={'allcomments': allcomments }
 
-        return render(request, 'comment/home.html', context)
+#         return render(request, 'comment/home.html', context)
 
 
-def detail_comment_view(request, id=None):
-        eachcomment= get_object_or_404(Comment, id=id)
+# def detail_comment_view(request, id=None):
+#         eachcomment= get_object_or_404(Comment, id=id)
 
         
 
-        context={'eachcomment': eachcomment}
+#         context={'eachcomment': eachcomment}
 
-        return render (request, 'comment/detail.html', context)
+#         return render (request, 'comment/detail.html', context)
 
 
 
-def commentlikebutton(request, commentid, videolikebutton):
+# def commentlikebutton(request, commentid, videolikebutton):
         
-        if request.method == "POST":
-                eachcomment= get_object_or_404(Comment, id=commentid)
+#         if request.method == "POST":
+#                 eachcomment= get_object_or_404(Comment, id=commentid)
 
-                obj=''
+#                 obj=''
 
-                valueobj=''
+#                 valueobj=''
 
-                try:
-                        obj= LikeButton.objects.get(user= request.video, post= eachcomment)
+#                 try:
+#                         obj= LikeButton.objects.get(user= request.video, post= eachcomment)
 
-                        valueobj= obj.value 
+#                         valueobj= obj.value 
 
 
-                        valueobj= int(valueobj)
+#                         valueobj= int(valueobj)
 
-                        userpreference= int(videolikebutton)
+#                         userpreference= int(videolikebutton)
                 
-                        if valueobj != videolikebutton:
-                                obj.delete()
+#                         if valueobj != videolikebutton:
+#                                 obj.delete()
 
 
-                                upref= LikeButton()
-                                upref.video= request.video
+#                                 upref= LikeButton()
+#                                 upref.video= request.video
 
-                                upref.comment= eachcomment
+#                                 upref.comment= eachcomment
 
-                                upref.value= videolikebutton
+#                                 upref.value= videolikebutton
 
 
-                                if videolikebutton == 1 and valueobj != 1:
-                                        eachcomment.likes += 1
-                                        eachcomment.dislikes -=1
-                                elif videolikebutton == 2 and valueobj != 2:
-                                        eachcomment.dislikes += 1
-                                        eachcomment.likes -= 1
+#                                 if videolikebutton == 1 and valueobj != 1:
+#                                         eachcomment.likes += 1
+#                                         eachcomment.dislikes -=1
+#                                 elif videolikebutton == 2 and valueobj != 2:
+#                                         eachcomment.dislikes += 1
+#                                         eachcomment.likes -= 1
                                 
 
-                                upref.save()
+#                                 upref.save()
 
-                                eachcomment.save()
+#                                 eachcomment.save()
                         
                         
-                                context= {'eachcomment': eachcomment,
-                                  'commentid': commentid}
+#                                 context= {'eachcomment': eachcomment,
+#                                   'commentid': commentid}
 
-                                return render (request, 'comment/detail.html', context)
+#                                 return render (request, 'comment/detail.html', context)
 
-                        elif valueobj == videolikebutton:
-                                obj.delete()
+#                         elif valueobj == videolikebutton:
+#                                 obj.delete()
                         
-                                if videolikebutton == 1:
-                                        eachcomment.likes -= 1
-                                elif userpreference == 2:
-                                        eachcomment.dislikes -= 1
+#                                 if videolikebutton == 1:
+#                                         eachcomment.likes -= 1
+#                                 elif userpreference == 2:
+#                                         eachcomment.dislikes -= 1
 
-                                eachcomment.save()
+#                                 eachcomment.save()
 
-                                context= {'eachcomment': eachcomment,
-                                  'commentid': commentid}
+#                                 context= {'eachcomment': eachcomment,
+#                                   'commentid': commentid}
 
-                                return render (request, 'comment/detail.html', context)
+#                                 return render (request, 'comment/detail.html', context)
                                 
                         
         
                 
-                except LikeButton.DoesNotExist:
-                        upref= LikeButton()
+#                 except LikeButton.DoesNotExist:
+#                         upref= LikeButton()
 
-                        upref.video= request.video
+#                         upref.video= request.video
 
-                        upref.comment= eachcomment
+#                         upref.comment= eachcomment
 
-                        upref.value= videolikebutton
+#                         upref.value= videolikebutton
 
-                        videolikebutton= int(videolikebutton)
+#                         videolikebutton= int(videolikebutton)
 
-                        if videolikebutton == 1:
-                                eachcomment.likes += 1
-                        elif videolikebutton == 2:
-                                eachcomment.dislikes +=1
+#                         if videolikebutton == 1:
+#                                 eachcomment.likes += 1
+#                         elif videolikebutton == 2:
+#                                 eachcomment.dislikes +=1
 
-                        upref.save()
+#                         upref.save()
 
-                        eachcomment.save()                            
-
-
-                        context= {'eachcomment': eachcomment,
-                          'commentid': commentid}
-
-                        return render (request, 'comment/detail.html', context)
+#                         eachcomment.save()                            
 
 
-        else:
-                eachcomment= get_object_or_404(Comment, id=commentid)
-                context= {'eachcomment': eachcomment,
-                          'commentid': commentid}
+#                         context= {'eachcomment': eachcomment,
+#                           'commentid': commentid}
 
-                return render (request, 'comment/detail.html', context)
+#                         return render (request, 'comment/detail.html', context)
+
+
+#         else:
+#                 eachcomment= get_object_or_404(Comment, id=commentid)
+#                 context= {'eachcomment': eachcomment,
+#                           'commentid': commentid}
+
+#                 return render (request, 'comment/detail.html', context)
 

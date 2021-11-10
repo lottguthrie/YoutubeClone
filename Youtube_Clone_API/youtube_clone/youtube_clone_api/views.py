@@ -122,9 +122,6 @@ class ReplyDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-from django.shortcuts import render, get_object_or_404
-
-
 
 
 

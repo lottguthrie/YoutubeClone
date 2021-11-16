@@ -1,18 +1,17 @@
 import React from 'react';
-import App from './App'
+import VideoItem from './VideoItem';
 
-function VideoCollection(props) {
+const VideoCollection = ({videos,onVideoSelect}) => {
+  const renderlist = videos.map(video => {
+    return( <VideoItem onVideoSelect={onVideoSelect} video={video}/> );
+  });
 
-    return (
-        <React.Fragment>
-        <div>
-        {props.videos.map((element)=> <img src = {element.snippet.thumbnails.default.url} width='120' height='90'/>)}
-        </div>
-        </React.Fragment>
-        )}
-    
-            
-    
+  return(
+    <div className="ui relaxed divided list">
+      {renderlist}
+    </div>
+  );
+};
 
 
 export default VideoCollection;
